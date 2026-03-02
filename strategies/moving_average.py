@@ -25,7 +25,7 @@ def moving_average_crossover(data: pd.DataFrame,
     df['SMA_Long'] = simple_moving_average(df, long_window)
 
     # Create signal column (0 = no signal)
-    df['Signal'] = 0
+    df['Signal'] = 0.0
 
     # Generate BUY (1) and SELL (-1) signals
     df.loc[df['SMA_Short'] > df['SMA_Long'], 'Signal'] = 1

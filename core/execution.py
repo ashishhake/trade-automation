@@ -4,42 +4,33 @@ import pandas as pd
 def execute_trades(data: pd.DataFrame) -> pd.DataFrame:
     """
     Simulate trade execution based on signals.
-
-    Parameters:
-    data (pd.DataFrame): Data containing Signal and Close price
-
-    Returns:
-    pd.DataFrame: Data with trade execution details
     """
 
-    # Copy data to avoid modifying original
     df = data.copy()
 
-    # Track current position (0 = no trade, 1 = in trade)
-    position = 0
+    position = 0  # 0 = no trade, 1 = in trade
 
-    # Create new columns
     df['Trade'] = "HOLD"
     df['Entry_Price'] = 0.0
     df['Exit_Price'] = 0.0
 
     for i in range(len(df)):
-        signal = df['Signal'].iloc[i]
-        price = df['Close'].iloc[i]
+        signal = df.iloc[i]['Signal']
+        price = df.iloc[i]['Close']
 
-        # If BUY signal and no open position
+        # BUY
         if signal == 1 and position == 0:
             position = 1
-            df['Trade'].iloc[i] = "BUY"
-            df['Entry_Price'].iloc[i] = price
+            df.loc[df.index[i], 'Trade'] = "BUY"
+            df.loc[df.index[i], 'Entry_Price'] = price
 
-        # If SELL signal and position is open
+        # SELL
         elif signal == -1 and position == 1:
             position = 0
-            df['Trade'].iloc[i] = "SELL"
-            df['Exit_Price'].iloc[i] = price
+            df.loc[df.index[i], 'Trade'] = "SELL"
+            df.loc[df.index[i], 'Exit_Price'] = price
 
         else:
-            df['Trade'].iloc[i] = "HOLD"
+            df.loc[df.index[i], 'Trade'] = "HOLD"
 
     return df
